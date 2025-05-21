@@ -14,10 +14,9 @@ import {
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
 import {
-  Calendar,
-  Dashboard,
-  LogOut,
+  LayoutDashboard,
   Plane,
+  LogOut,
   Search,
   Settings,
   Ticket,
@@ -37,7 +36,7 @@ export function AppSidebar() {
       {
         title: "Dashboard",
         url: "/dashboard",
-        icon: Dashboard,
+        icon: LayoutDashboard,
       },
       {
         title: "Flights",

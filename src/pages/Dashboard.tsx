@@ -3,7 +3,9 @@ import { useAuth, UserRole } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { BarChart, LineChart, DonutChart } from "@/components/ui/chart";
+import { BarChart } from "@/components/charts/BarChart";
+import { LineChart } from "@/components/charts/LineChart";
+import { DonutChart } from "@/components/charts/DonutChart";
 import { 
   Plane, 
   Calendar, 
