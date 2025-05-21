@@ -18,6 +18,10 @@ import ResetPassword from "./pages/auth/ResetPassword";
 // App Pages
 import Dashboard from "./pages/Dashboard";
 import Flights from "./pages/Flights";
+import MyBookings from "./pages/MyBookings";
+import MyTickets from "./pages/MyTickets";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -86,6 +90,38 @@ const App = () => (
               element={
                 <MainLayout>
                   <Flights />
+                </MainLayout>
+              } 
+            />
+            <Route 
+              path="/bookings" 
+              element={
+                <MainLayout>
+                  <MyBookings />
+                </MainLayout>
+              } 
+            />
+            <Route 
+              path="/tickets" 
+              element={
+                <MainLayout>
+                  <MyTickets />
+                </MainLayout>
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                <MainLayout>
+                  <Profile />
+                </MainLayout>
+              } 
+            />
+            <Route 
+              path="/settings" 
+              element={
+                <MainLayout>
+                  <Settings />
                 </MainLayout>
               } 
             />

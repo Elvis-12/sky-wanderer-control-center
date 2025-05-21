@@ -14,10 +14,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, UserRole } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, UserPlus } from "lucide-react";
+import { Eye, EyeOff, UserPlus, Shield } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 // Form schema
 const signupSchema = z.object({
@@ -25,6 +27,7 @@ const signupSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
   confirmPassword: z.string(),
+  isAdmin: z.boolean().default(false),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
@@ -48,6 +51,7 @@ const Signup = () => {
       email: "",
       password: "",
       confirmPassword: "",
+      isAdmin: false,
     },
   });
 
@@ -55,10 +59,17 @@ const Signup = () => {
   const onSubmit = async (values: SignupFormValues) => {
     try {
       setIsLoading(true);
-      await signup(values.email, values.name, values.password);
+      // Pass the isAdmin value to determine the user role
+      await signup(
+        values.email, 
+        values.name, 
+        values.password, 
+        values.isAdmin ? UserRole.ADMIN : UserRole.USER
+      );
+      
       toast({
         title: "Account created successfully",
-        description: "Please check your email for verification instructions",
+        description: "You can now log in to your account",
       });
       navigate("/login");
     } catch (error) {
@@ -73,11 +84,11 @@ const Signup = () => {
   };
 
   return (
-    <Card className="auth-card">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Create an account</CardTitle>
+    <Card className="auth-card max-w-md w-full">
+      <CardHeader className="text-center space-y-2">
+        <CardTitle className="text-2xl font-bold text-primary">Create your account</CardTitle>
         <CardDescription>
-          Enter your information to start booking flights
+          Join Sky Wanderer Airlines to start your journey
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -90,7 +101,7 @@ const Signup = () => {
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="John Doe" {...field} />
+                    <Input placeholder="John Doe" className="bg-background" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,7 +115,7 @@ const Signup = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="email@example.com" {...field} />
+                    <Input placeholder="email@example.com" className="bg-background" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,6 +133,7 @@ const Signup = () => {
                       <Input 
                         type={showPassword ? "text" : "password"}
                         placeholder="••••••••" 
+                        className="bg-background"
                         {...field} 
                       />
                       <Button
@@ -151,6 +163,7 @@ const Signup = () => {
                       <Input 
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="••••••••" 
+                        className="bg-background"
                         {...field} 
                       />
                       <Button
@@ -165,6 +178,30 @@ const Signup = () => {
                     </div>
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="isAdmin"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base flex items-center gap-2">
+                      <Shield size={16} />
+                      Admin Account
+                    </FormLabel>
+                    <FormDescription className="text-xs">
+                      Enable admin privileges for this account
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
@@ -191,11 +228,13 @@ const Signup = () => {
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="text-center">
-        Already have an account?{" "}
-        <Link to="/login" className="auth-link">
-          Log in
-        </Link>
+      <CardFooter className="flex justify-center border-t pt-4 mt-4">
+        <p>
+          Already have an account?{" "}
+          <Link to="/login" className="text-primary hover:underline font-medium">
+            Log in
+          </Link>
+        </p>
       </CardFooter>
     </Card>
   );

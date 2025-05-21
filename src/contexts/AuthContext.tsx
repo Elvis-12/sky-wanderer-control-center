@@ -20,7 +20,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, name: string, password: string) => Promise<void>;
+  signup: (email: string, name: string, password: string, role?: UserRole) => Promise<void>;
   logout: () => void;
   forgotPassword: (email: string) => Promise<void>;
   resetPassword: (token: string, newPassword: string) => Promise<void>;
@@ -114,8 +114,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Mock signup function
-  const signup = async (email: string, name: string, password: string) => {
+  // Mock signup function - updated to handle role selection
+  const signup = async (email: string, name: string, password: string, role: UserRole = UserRole.USER) => {
     setLoading(true);
     try {
       // Simulate API call
@@ -127,7 +127,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // In a real app, this would create a user in the database
-      console.log("User registered:", { email, name });
+      // For demo, add to our SAMPLE_USERS array
+      const newUser = {
+        id: `${SAMPLE_USERS.length + 1}`,
+        email,
+        password,
+        name,
+        role,
+      };
+      
+      // Add to sample users (this will be reset on page reload since it's not persisted)
+      SAMPLE_USERS.push(newUser);
+      
+      console.log("User registered:", { email, name, role });
     } catch (error) {
       console.error("Signup error:", error);
       throw error;
