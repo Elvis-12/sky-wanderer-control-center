@@ -141,7 +141,7 @@ export function AppSidebar() {
         </div>
         <Button
           variant="outline"
-          className="w-full"
+          className="w-full text-foreground border-border hover:bg-accent hover:text-accent-foreground"
           onClick={logout}
         >
           <LogOut className="mr-2 h-4 w-4" />

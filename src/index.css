@@ -151,6 +151,10 @@
   .auth-link {
     @apply text-primary font-medium ml-1 hover:underline;
   }
+  
+  .visible-button {
+    @apply text-foreground hover:bg-accent hover:text-accent-foreground;
+  }
 }
 
 /* Modern animations and transitions */
