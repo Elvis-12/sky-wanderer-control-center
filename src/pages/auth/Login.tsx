@@ -18,11 +18,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // Form schema
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  rememberMe: z.boolean().optional(),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -40,6 +42,7 @@ const Login = () => {
     defaultValues: {
       email: "",
       password: "",
+      rememberMe: false,
     },
   });
 
@@ -47,13 +50,17 @@ const Login = () => {
   const onSubmit = async (values: LoginFormValues) => {
     try {
       setIsLoading(true);
+      console.log("Attempting login with:", { email: values.email });
+      
       await login(values.email, values.password);
-      navigate("/dashboard");
+      
       toast({
         title: "Login successful",
         description: "Welcome back!",
       });
+      navigate("/dashboard");
     } catch (error) {
+      console.error("Login error:", error);
       toast({
         title: "Login failed",
         description: error instanceof Error ? error.message : "Please check your credentials and try again",
@@ -65,7 +72,7 @@ const Login = () => {
   };
 
   return (
-    <Card className="auth-card">
+    <Card className="auth-card w-full max-w-md mx-auto">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
@@ -114,6 +121,26 @@ const Login = () => {
                     </div>
                   </FormControl>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="rememberMe"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>
+                      Remember me
+                    </FormLabel>
+                  </div>
                 </FormItem>
               )}
             />

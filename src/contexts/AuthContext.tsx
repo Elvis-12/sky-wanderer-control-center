@@ -71,52 +71,74 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(JSON.parse(savedUser));
     }
     setLoading(false);
+    
+    // Log for debugging
+    console.log("Auth initialized, user from localStorage:", savedUser ? "exists" : "null");
   }, []);
 
   // Mock login function
   const login = async (email: string, password: string) => {
     setLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log("Login attempt:", { email });
+    
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const foundUser = SAMPLE_USERS.find(
-      (u) => u.email === email && u.password === password
-    );
+      const foundUser = SAMPLE_USERS.find(
+        (u) => u.email === email && u.password === password
+      );
 
-    if (foundUser) {
-      const userWithoutPassword = {
-        id: foundUser.id,
-        email: foundUser.email,
-        name: foundUser.name,
-        role: foundUser.role,
-      };
-      setUser(userWithoutPassword);
-      localStorage.setItem("user", JSON.stringify(userWithoutPassword));
-    } else {
-      throw new Error("Invalid email or password");
+      console.log("User found:", foundUser ? "yes" : "no");
+
+      if (foundUser) {
+        const userWithoutPassword = {
+          id: foundUser.id,
+          email: foundUser.email,
+          name: foundUser.name,
+          role: foundUser.role,
+        };
+        setUser(userWithoutPassword);
+        localStorage.setItem("user", JSON.stringify(userWithoutPassword));
+        console.log("User set in state and localStorage");
+        return;
+      } else {
+        console.log("Invalid credentials");
+        throw new Error("Invalid email or password");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   // Mock signup function
   const signup = async (email: string, name: string, password: string) => {
     setLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Check if user already exists
-    if (SAMPLE_USERS.some((u) => u.email === email)) {
-      throw new Error("Email already in use");
+      // Check if user already exists
+      if (SAMPLE_USERS.some((u) => u.email === email)) {
+        throw new Error("Email already in use");
+      }
+
+      // In a real app, this would create a user in the database
+      console.log("User registered:", { email, name });
+    } catch (error) {
+      console.error("Signup error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
-
-    // In a real app, this would create a user in the database
-    console.log("User registered:", { email, name });
-
-    setLoading(false);
   };
 
   // Mock logout function
   const logout = () => {
+    console.log("Logging out");
     setUser(null);
     localStorage.removeItem("user");
   };
@@ -124,30 +146,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Mock forgot password function
   const forgotPassword = async (email: string) => {
     setLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const user = SAMPLE_USERS.find((u) => u.email === email);
-    if (!user) {
-      throw new Error("No account found with this email");
+      const user = SAMPLE_USERS.find((u) => u.email === email);
+      if (!user) {
+        throw new Error("No account found with this email");
+      }
+
+      // In a real app, this would send an email with a reset link
+      console.log("Password reset requested for:", email);
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
-
-    // In a real app, this would send an email with a reset link
-    console.log("Password reset requested for:", email);
-
-    setLoading(false);
   };
 
   // Mock reset password function
   const resetPassword = async (token: string, newPassword: string) => {
     setLoading(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // In a real app, this would validate the token and update the password
-    console.log("Password reset with token:", token);
-
-    setLoading(false);
+      // In a real app, this would validate the token and update the password
+      console.log("Password reset with token:", token);
+    } catch (error) {
+      console.error("Reset password error:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const value = {
