@@ -42,18 +42,21 @@ export function AppSidebar() {
         title: "Flights",
         url: "/flights",
         icon: Plane,
-      },
-      {
-        title: "My Bookings",
-        url: "/bookings",
-        icon: Book,
-      },
-      {
-        title: "My Tickets",
-        url: "/tickets",
-        icon: Ticket,
-      },
+      }
     ];
+
+    // Different labels for admin vs regular user
+    const bookingsItem = {
+      title: isAdmin ? "Bookings" : "My Bookings",
+      url: "/bookings",
+      icon: Book,
+    };
+
+    const ticketsItem = {
+      title: isAdmin ? "Tickets" : "My Tickets",
+      url: "/tickets",
+      icon: Ticket,
+    };
 
     const adminItems = [
       {
@@ -63,7 +66,9 @@ export function AppSidebar() {
       },
     ];
 
-    return isAdmin ? [...baseItems, ...adminItems] : baseItems;
+    return isAdmin 
+      ? [...baseItems, bookingsItem, ticketsItem, ...adminItems] 
+      : [...baseItems, bookingsItem, ticketsItem];
   };
 
   const navigationItems = getNavigationItems();
@@ -73,7 +78,7 @@ export function AppSidebar() {
       <SidebarHeader className="flex items-center h-14 p-4 border-b">
         <Link to="/dashboard" className="flex items-center gap-2 font-bold text-lg">
           <Plane className="h-5 w-5 text-primary" />
-          <span>Sky Wanderer</span>
+          <span>FLYAIR</span>
         </Link>
         <div className="ml-auto lg:hidden">
           <SidebarTrigger />

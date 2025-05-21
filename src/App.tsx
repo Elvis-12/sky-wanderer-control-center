@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 
 // Layouts
@@ -16,10 +16,12 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
 
 // App Pages
+import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import Flights from "./pages/Flights";
 import MyBookings from "./pages/MyBookings";
 import MyTickets from "./pages/MyTickets";
+import UserManagement from "./pages/UserManagement";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -34,6 +36,12 @@ const App = () => (
       <AuthProvider>
         <BrowserRouter>
           <Routes>
+            {/* Landing Page (public) */}
+            <Route 
+              path="/" 
+              element={<LandingPage />} 
+            />
+
             {/* Auth Routes */}
             <Route 
               path="/login" 
@@ -70,14 +78,6 @@ const App = () => (
             
             {/* App Routes */}
             <Route 
-              path="/" 
-              element={
-                <MainLayout>
-                  <Dashboard />
-                </MainLayout>
-              } 
-            />
-            <Route 
               path="/dashboard" 
               element={
                 <MainLayout>
@@ -106,6 +106,14 @@ const App = () => (
               element={
                 <MainLayout>
                   <MyTickets />
+                </MainLayout>
+              } 
+            />
+            <Route 
+              path="/users" 
+              element={
+                <MainLayout adminOnly={true}>
+                  <UserManagement />
                 </MainLayout>
               } 
             />
