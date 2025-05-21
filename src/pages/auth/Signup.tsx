@@ -192,9 +192,9 @@ const Signup = () => {
                       <Shield size={16} />
                       Admin Account
                     </FormLabel>
-                    <FormDescription className="text-xs">
+                    <CardDescription className="text-xs">
                       Enable admin privileges for this account
-                    </FormDescription>
+                    </CardDescription>
                   </div>
                   <FormControl>
                     <Switch
